@@ -16,7 +16,8 @@ const bodyParser = require('body-parser');
 
 
 //   '/users'에 대한 요청은 ./api/user 미들웨어가 담당한다.
-app.use('/users', require('./api/user'));
+app.use('/users', require('./api/users'));
+app.use('/rtd', require('./api/rtd'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

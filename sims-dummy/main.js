@@ -29,3 +29,18 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
+
+
+//소켓 작업
+const dummyPort = 3001;
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+
+http.listen(dummyPort, function(){
+  console.log(`server listening on localhost:${dummyPort}`);
+});
