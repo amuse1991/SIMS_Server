@@ -21,14 +21,19 @@
 //     }
 //   ]
 const io = require('socket.io-client');
-const dummyHost = 'http://localhost:3001';
+const dummyHost = 'http://localhost:3003';
 
 exports.connectionTest = (req,res)=>{
     console.log('connection test called');
-    const socket = io('http://localhost:3001');
+    const socket = io('http://localhost:3003');
     socket.on('connect', () => {
-        console.log(socket.id); // 'G5p5...'
+        //console.log(socket.id); // 'G5p5...'
+        console.log('connected')
+        socket.emit('request_telemetry');
       });
+    socket.on('response_telemetry',function(msg){
+        console.log(msg)
+    });
 };
 
 exports.disconnectionTest = (req,res)=>{
