@@ -46,7 +46,12 @@ io.on('connection', function(socket){
     //TODO : DB에서 satelliteName 으로 데이터 검색
     
     //클라이언트(sims-server)에 WOD 데이터 전달
-    io.emit('response_telemetry',"this is telemetry data")
+    //TODO : 아래는 테스트 데이터를 이용한 코드임. DB활용하는 코드로 바꾸어야 함
+      testData.forEach((data,idx)=>{
+        setTimeout(function(){
+          io.emit('response_telemetry',data);
+        },idx*2000);
+    });
   });
 
   socket.on('request_telecommand',function(){
