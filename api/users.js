@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('./user.controller');
+const userController = require('../controller/user.controller');
 
 
 
@@ -9,12 +9,10 @@ users에 대한 요청 처리를 명시해 줬으므로, 경로에서 /users는 
 ex) /users/:id (X)
     /:id (O)   
 */
-router.get('/', controller.index);
 
-router.get('/:id', controller.show);
-
-router.delete('/:id', controller.destroy);
-
-router.post('/', controller.create);
-
+//users
+router.get('/', userController.index);
+router.get('/:id', userController.show);
+router.delete('/:id', userController.destroy);
+router.post('/', userController.create);
 module.exports = router;
