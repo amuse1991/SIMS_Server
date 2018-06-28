@@ -45,7 +45,6 @@ http.listen(socketPort, function(){
     console.log(`SIMS-Server(socket) listening on localhost:${socketPort}`);
   });
 
-//var telemetry = null;  
 io.on('connection', function(socket){
     console.log('a user connected');
     
@@ -57,17 +56,14 @@ io.on('connection', function(socket){
         clientSocket.on('connect', () => {
             clientSocket.emit('request_telemetry',satelliteName);
         });
-        clientSocket.on('response_telemetry',function(msg){
+        clientSocket.on('response_telemetry',(msg)=>{
             console.log(msg);
-            // telemetry = msg;
-            io.emit('response_telemetry',msg);
+            io.emit('response_telemetry',msg)
         });
-        //클라이언트(sims-client)에 WOD 데이터 전달
-        // console.log(`td:${telemetry}`);
-        // io.emit('response_telemetry',telemetry);
     });
   
     socket.on('request_telecommand',function(){
   
     });
+    
 });

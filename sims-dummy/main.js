@@ -30,6 +30,7 @@ sequelize
   });
 
 //TODO : WOD 모델 정의
+
 //TODO : DB에서 WOD 데이터 가져오기
 
 //소켓 작업
@@ -50,7 +51,7 @@ io.on('connection', function(socket){
       testData.forEach((data,idx)=>{
         setTimeout(function(){
           io.emit('response_telemetry',data);
-        },idx*2000);
+        },idx*5000);
     });
   });
 
