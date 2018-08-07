@@ -1,3 +1,30 @@
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize(
+    'SIMS', //db name
+    'sa', //username
+    '01062581441', //password
+    {
+    host: 'simsdb.canbesucadip.ap-northeast-2.rds.amazonaws.com',
+    dialect: 'mssql',
+    operatorsAliases: false,
+
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+    },
+});
+
+//연결 테스트
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
 
 let users = [
     {
@@ -17,7 +44,7 @@ let users = [
 exports.index = (req, res) => {
     return res.json(users);
 };
-  
+
 exports.show = (req, res) => {
     console.log(req.params.id); // 사용자가 입력한 :id 값이 출력됨. (주의: 클라이언트가 요청할때 서버로 오는 데이터는 전부 문자열 형식입니다. 기억하세요. )
     
@@ -35,7 +62,7 @@ exports.show = (req, res) => {
 
     return res.json(user);
 };
-  
+
 exports.destroy = (req, res) => {
     const id = parseInt(req.params.id, 10);
     if (!id) {
