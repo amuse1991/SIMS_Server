@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
         TelemetryName:{type:DataTypes.STRING},
         DataTableName:{type:DataTypes.STRING},
         TmDataMetaCode:{type:DataTypes.INTEGER}
+    },{
+        tableName: 'TB_TelemetryMeta',
+        timestamps: false,
+        freezeTableName: true
     });
     return TelemetryMeta;
 }

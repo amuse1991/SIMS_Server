@@ -28,6 +28,8 @@ const socketPort = 3001;
 //   '/users'에 대한 요청은 ./api/user 미들웨어가 담당한다.
 apiApp.use('/users', require('./api/users'));
 apiApp.use('/rtd', require('./api/rtd'));
+apiApp.use('/archived', require('./api/archived'));
+apiApp.use('/gtd',require('./api/gtd'));
 
 apiApp.use(bodyParser.json());
 apiApp.use(bodyParser.urlencoded({ extended: true }));

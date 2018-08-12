@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
         Position:{type:DataTypes.STRING},
         Email:{type:DataTypes.STRING},
         Phone:{type:DataTypes.STRING}
-    });
+    },{
+        tableName: 'TB_User',
+          timestamps: false,
+          freezeTableName: true
+      });
     return User;
 }

@@ -12,7 +12,7 @@ ex) /users/:id (X)
 
 //users
 router.get('/', userController.index);
-router.get('/:id', userController.show);
+router.get('/all', userController.show);
 router.delete('/:id', userController.destroy);
 router.post('/', userController.create);
 module.exports = router;

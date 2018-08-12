@@ -1,25 +1,3 @@
-
-/*
-    req_model =
-        {
-            satellite_name
-        }
-    
-*/
-// let users = [
-//     {
-//       id: 1,
-//       name: 'alice'
-//     },
-//     {
-//       id: 2,
-//       name: 'bek'
-//     },
-//     {
-//       id: 3,
-//       name: 'chris'
-//     }
-//   ]
 const io = require('socket.io-client');
 const dummyHost = 'http://localhost:3003';
 
@@ -29,10 +7,10 @@ exports.connectionTest = (req,res)=>{
     socket.on('connect', () => {
         //console.log(socket.id); // 'G5p5...'
         console.log('connected')
-        socket.emit('request_telemetry');
+        socket.emit('request_telemetry','WOD');
       });
     socket.on('response_telemetry',function(msg){
-        console.log(msg)
+        console.log(msg);
     });
 };
 
@@ -41,11 +19,19 @@ exports.disconnectionTest = (req,res)=>{
 };
 
 exports.getTelemetry = (req,res) => {
-    console.log('get telemetry api called')
+    console.log('get real time telemetry api called');
+    const rtdType = req.params.rtdType;
     //dummy server 연결
-    socket.connect();
-    const satelliteName = req.params.satelliteName
-    //결과값 반환
+    console.log('connection test called');
+    const socket = io(dummyHost);
+    socket.on('connect', () => {
+        console.log('connected')
+        socket.emit('request_telemetry','WOD');
+      });
+    socket.on('response_telemetry',function(msg){
+        
+        console.log(msg)
+    });
 }
 
 exports.getTelecommand = (req,res) => {

@@ -1,10 +1,5 @@
-const db = require('./DB/db'); //db모듈 import
+const db = require('./DB/db');
 const WOD = require('./DB/model/WOD0')(db.sequelize,db.Sequelize.DataTypes); //WOD 모델 import
-
-//DB에서 WOD 데이터 가져오기
-WOD.findAll().then(wods=>{
-  console.log(wods);
-})
 
 //소켓 작업
 const dummyPort = 3003;
@@ -14,20 +9,38 @@ var io = require('socket.io')(http);
 
 io.on('connection', function(socket){
   console.log('a user connected');
-  
   //TM 데이터 요청 이벤트에 대한 이벤트 리스너
-  socket.on('request_telemetry',function(satelliteName){
-    //TODO : DB에서 satelliteName 으로 데이터 검색
-    
+  socket.on('request_telemetry',function(rtdType){
+    //rtdType에 따른 데이터 전달
+    switch(rtdType){
+      case 'WOD':
+        //SIMS-Server에 WOD 데이터 전달
+        WOD.findAll().then(wods=>{ //DB에서 WOD 데이터 가져오기
+          wods.forEach((data,idx)=>{
+            setTimeout(function(){ //초당 하나씩 데이터를 전달
+              io.emit('response_telemetry',data);
+            },idx*1000);
+          });
+        },()=>{
+          //TODO : DB에서 WOD 데이터 가져오지 못한 경우 null 반환
+          console.log('db connection failed');
+        });
+        break;
+      case 'FCS' :
+        //SIMS-Server에 FCS 데이터 전달
+        break;
+    }
+    /*
     //클라이언트(sims-server)에 WOD 데이터 전달
-    //TODO : 아래는 테스트 데이터를 이용한 코드임. DB활용하는 코드로 바꾸어야 함
       testData.forEach((data,idx)=>{
         setTimeout(function(){
           io.emit('response_telemetry',data);
         },idx*5000);
     });
+    */
   });
 
+  //TC 데이터 요청 이벤트에 대한 이벤트 리스너
   socket.on('request_telecommand',function(){
 
   });

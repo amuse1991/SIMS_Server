@@ -4,6 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     var Satellite = sequelize.define('Satellite',{
         SatelliteCode:{type:DataTypes.STRING},
         SatelliteName:{type:DataTypes.STRING}
+    },{
+        tableName: 'TB_Satellite',
+          timestamps: false,
+          freezeTableName: true
     });
 
     //TODO : FK 연결

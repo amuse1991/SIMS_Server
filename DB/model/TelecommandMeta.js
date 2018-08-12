@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
         TelecommandName:{type:DataTypes.STRING},
         DataTableName:{type:DataTypes.STRING},
         TcDataMetaCode:{type:DataTypes.INTEGER}
+    },{
+        tableName: 'TB_TelecommandMeta',
+          timestamps: false,
+          freezeTableName: true
     });
     return TelecommandMeta;
 }
