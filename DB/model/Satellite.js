@@ -2,8 +2,14 @@
 module.exports = (sequelize, DataTypes) => {
     // 모델 정의
     var Satellite = sequelize.define('Satellite',{
-        SatelliteCode:{type:DataTypes.STRING},
-        SatelliteName:{type:DataTypes.STRING}
+        SatelliteCode:{
+            type:DataTypes.STRING,
+            primaryKey:true
+        },
+        SatelliteName:{type:DataTypes.STRING},
+        ImgSource:{type:DataTypes.STRING},
+        LaunchDate:{type:DataTypes.DATE},
+        DaysOfOperation:{type:DataTypes.INTEGER}
     },{
         tableName: 'TB_Satellite',
           timestamps: false,

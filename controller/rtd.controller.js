@@ -26,7 +26,7 @@ exports.getTelemetry = (req,res) => {
     const socket = io(dummyHost);
     socket.on('connect', () => {
         console.log('connected')
-        socket.emit('request_telemetry','WOD');
+        socket.emit('request_telemetry','FCS');
       });
     socket.on('response_telemetry',function(msg){
         

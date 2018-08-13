@@ -25,14 +25,18 @@ const socketPort = 3001;
 */
 
 
-//   '/users'에 대한 요청은 ./api/user 미들웨어가 담당한다.
-apiApp.use('/users', require('./api/users'));
-apiApp.use('/rtd', require('./api/rtd'));
-apiApp.use('/archived', require('./api/archived'));
-apiApp.use('/gtd',require('./api/gtd'));
-
 apiApp.use(bodyParser.json());
 apiApp.use(bodyParser.urlencoded({ extended: true }));
+
+//   '/users'에 대한 요청은 ./api/user 미들웨어가 담당한다.
+apiApp.use('/users', require('./api/users'));
+apiApp.use('/satellite',require('./api/satellite'));
+apiApp.use('/dashboard',require('./api/dashboard'));
+apiApp.use('/satellite',require('./api/tc'));
+apiApp.use('/satellite',require('./api/tm'));
+apiApp.use('/rtd', require('./api/rtd'));
+apiApp.use('/gtd',require('./api/gtd'));
+
 
 
 // app.listen(요청 대기할 port,서버 구동 완료되었을때 실행할 함수)
@@ -49,14 +53,13 @@ http.listen(socketPort, function(){
 
 io.on('connection', function(socket){
     console.log('a user connected');
-    
     //TM 데이터 요청 이벤트에 대한 이벤트 리스너
-    socket.on('request_telemetry',function(satelliteName){
-        console.log(satelliteName);
+    socket.on('request_telemetry',function(rtdType){
+        console.log(rtdType);
         //dummy server에 연결
         const clientSocket = ioClient(dummyHost);
         clientSocket.on('connect', () => {
-            clientSocket.emit('request_telemetry',satelliteName);
+            clientSocket.emit('request_telemetry',rtdType);
         });
         clientSocket.on('response_telemetry',(msg)=>{
             console.log(msg);
