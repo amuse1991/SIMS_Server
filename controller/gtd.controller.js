@@ -2,7 +2,7 @@ const db = require('../DB/db');
 const orbitDataModel = require('../DB/model/OrbitData')(db.sequelize,db.Sequelize.DataTypes);
 const Op = db.Sequelize.Op
 
-exports.getOrbitData = (req, res) => {
+exports.getAllOrbitData = (req, res) => {
     //TODO : return orbitData
     //TODO : req.params.time + 1초 데이터를 반환
     const satCode = req.params.satelliteCode;
@@ -21,3 +21,7 @@ exports.getOrbitData = (req, res) => {
       })
       
 };
+
+exports.getOrbitDataBySatCode = (req,res) => {
+    
+}
