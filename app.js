@@ -32,8 +32,8 @@ apiApp.use(bodyParser.urlencoded({ extended: true }));
 apiApp.use('/users', require('./api/users'));
 apiApp.use('/satellite',require('./api/satellite'));
 apiApp.use('/dashboard',require('./api/dashboard'));
-apiApp.use('/satellite',require('./api/tc'));
-apiApp.use('/satellite',require('./api/tm'));
+apiApp.use('/tc',require('./api/tc'));
+apiApp.use('/tm',require('./api/tm'));
 apiApp.use('/rtd', require('./api/rtd'));
 apiApp.use('/gtd',require('./api/gtd'));
 
