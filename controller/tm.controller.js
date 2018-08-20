@@ -40,7 +40,26 @@ exports.getMeta = (req,res) => {
 
 //post(telemetryCode:string, selectOption:{selectItems:[string(default==all)],searchCond:string(default==null)}})
 exports.getData = (req,res) => {
-
+    let tmCode = req.body.telemetryCode;
+    let option = req.body.selectOption || {selectItems:'all', searchCond:null}
+    let model = require('../DB/model/TelemetryMeta')(db.sequelize,db.Sequelize.DataTypes);
+    model.findOne({where:{TelemetryCode:tmCode}})
+        .bind(res)
+        .then(tmMeta=>{
+            let table = tmMeta.dataValues.DataTableName;
+            let dataModel = require(`../DB/model/telemetry/${table}`)(db.sequelize,db.Sequelize.DataTypes);
+            dataModel.findAll()
+                .then(data=>{
+                    if(option.selectItems === 'all' && option.searchCond === null){
+                        return res.status(200).json(data); //option이 없는 경우 전체 결과 반환
+                    }
+                    //TODO : option 처리 구현
+                },reason=>{
+                    return res.status(503).json({error:reason});
+                })
+        },reason=>{
+            return res.status(503).json({error:reason});
+        });
 }
 
 //post(telemetryCode:string, selectOption:{selectItems:[string(default==all)],searchCond:string(default==null)}})
@@ -56,10 +75,13 @@ exports.getChartType = (req,res) => {
             return result;
         },reason=>{
             return res.status(503).json({error:reason});
-        }) //TODO:select option 처리
+        }) 
         .then(result=>{
-            
+            if(option.selectItems === 'all' && option.searchCond === null){
+                return res.status(200).json(result); //option이 없는 경우 전체 결과 반환
+            }
+            //TODO:select option 처리 구현
         },reason=>{
-
+            return res.status(503).json({error:reason});
         })
 }
