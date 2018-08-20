@@ -1,9 +1,10 @@
 const db = require('./DB/db');
 const WOD = require('./DB/model/WOD0')(db.sequelize,db.Sequelize.DataTypes);
 const FCS = require('./DB/model/FCS')(db.sequelize,db.Sequelize.DataTypes); 
+const serverConfig = require('../configure/config').serverConfig;
 
 //소켓 작업
-const dummyPort = 3003;
+const dummyPort = serverConfig.dummyServerPort;
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -48,5 +49,5 @@ io.on('connection', function(socket){
 });
 
 http.listen(dummyPort, function(){
-  console.log(`server listening on localhost:${dummyPort}`);
+  console.log(`server listening on ${serverConfig.host}:${dummyPort}`);
 });

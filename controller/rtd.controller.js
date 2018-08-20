@@ -1,7 +1,8 @@
 const io = require('socket.io-client');
-const dummyHost = 'http://localhost:3003';
+const serverConfig = require('../configure/config').serverConfig;
 const db = require('../DB/db');
 const Op = db.Sequelize.Op;
+const dummyHost = `http://${serverConfig.host}:${serverConfig.dummyServerPort}`;
 /*
 exports.connectionTest = (req,res)=>{
     console.log('connection test called');

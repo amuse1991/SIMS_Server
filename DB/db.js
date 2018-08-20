@@ -1,23 +1,14 @@
+const databaseConfig = require('../configure/config').databaseConfig;
 const Sequelize = require('sequelize');
 var db = {};
 
 //연결 설정
 var sequelize = new Sequelize(
-    'SIMS', //db name
-    'sa', //username
-    '01062581441', //password
-    {
-    host: 'simsdb.canbesucadip.ap-northeast-2.rds.amazonaws.com',
-    dialect: 'mssql',
-    operatorsAliases: false,
-
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-    }
-});
+    databaseConfig.dbName, 
+    databaseConfig.userName,
+    databaseConfig.password,
+    databaseConfig.config
+  );
 
 //연결 테스트
 sequelize
