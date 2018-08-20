@@ -1,6 +1,6 @@
 const db = require('./DB/db');
 const WOD = require('./DB/model/WOD0')(db.sequelize,db.Sequelize.DataTypes);
-const FCS = require('./DB/model/FSC')(db.sequelize,db.Sequelize.DataTypes); 
+const FCS = require('./DB/model/FCS')(db.sequelize,db.Sequelize.DataTypes); 
 
 //소켓 작업
 const dummyPort = 3003;

@@ -1,8 +1,42 @@
 const db = require('../DB/db');
 const userModel = require('../DB/model/User')(db.sequelize,db.Sequelize.DataTypes);
 
-exports.index = (req, res) => {
-    return res.json(users);
+exports.login = (req, res) => {
+  let id = req.body.id;
+  let pwd = req.body.pwd;
+  userModel.findAndCountAll({
+    attributes:['Id','Pwd'],
+    where:{Id:id}
+    })
+    .bind(res)
+    .then(result=>{
+      if(result.count == 0){ //id가 존재하지 않는 경우
+        return res.status(404).json({error:'unknown user'});
+      }
+      let userData = result.rows[0];
+      if(userData.dataValues.Pwd !== pwd){ //pwd가 일치하지 않는 경우
+        return res.status(404).json({error:'incorrect password'});
+      }
+      //정상 로그인
+      return res.status(200).json(userData);
+    })
+};
+
+exports.create = (req, res) => {
+  let id = req.body.id;
+  let pwd = req.body.pwd;
+  let dept = req.body.dept;
+  let pos = req.body.pos;
+  let phone = req.body.phone;
+  
+};
+
+exports.update = (req, res) => {
+  
+};
+
+exports.delete = (req, res) => {
+  
 };
 /*
 exports.show = (req, res) => {
@@ -22,7 +56,7 @@ exports.show = (req, res) => {
 
     return res.json(user);
 };
-*/
+
 exports.show = (req, res) => {
   userModel.findAll().then(users=>{
     console.log(users);
@@ -66,3 +100,4 @@ exports.create = (req, res) => {
     //응답
     return res.status(201).json(newUser);
 };
+*/

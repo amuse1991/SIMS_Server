@@ -29,11 +29,11 @@ apiApp.use(bodyParser.json());
 apiApp.use(bodyParser.urlencoded({ extended: true }));
 
 //   '/users'에 대한 요청은 ./api/user 미들웨어가 담당한다.
-apiApp.use('/users', require('./api/users'));
+apiApp.use('/user', require('./api/users'));
 apiApp.use('/satellite',require('./api/satellite'));
 apiApp.use('/dashboard',require('./api/dashboard'));
-apiApp.use('/satellite',require('./api/tc'));
-apiApp.use('/satellite',require('./api/tm'));
+apiApp.use('/tc',require('./api/tc'));
+apiApp.use('/tm',require('./api/tm'));
 apiApp.use('/rtd', require('./api/rtd'));
 apiApp.use('/gtd',require('./api/gtd'));
 
