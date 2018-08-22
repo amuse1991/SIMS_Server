@@ -9,17 +9,11 @@ users에 대한 요청 처리를 명시해 줬으므로, 경로에서 /users는 
 ex) /users/:id (X)
     /:id (O)   
 */
-/*
+
 //users
-router.get('/', userController.index);
-router.get('/all', userController.show);
-router.delete('/:id', userController.destroy);
-router.post('/', userController.create);
-*/
-//TODO
 router.post('/login', userController.login);
 router.post('/create', userController.create);
 router.post('/update', userController.update);
-router.post('/delete', userController.delete);
+router.delete('/delete', userController.delete);
 
 module.exports = router;

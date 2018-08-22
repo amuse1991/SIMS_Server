@@ -38,25 +38,34 @@ exports.getMeta = (req,res) => {
         });
 }
 
-//post(telemetryCode:string, selectOption:{selectItems:[string(default==all)],searchCond:string(default==null)}})
+//post(telemetryCode:string, startDate:string, endDate:string)
 exports.getData = (req,res) => {
-    let tmCode = req.body.telemetryCode;
-    let option = req.body.selectOption || {selectItems:'all', searchCond:null}
+    let moment = require('moment');
+    let tmCode = req.body.telemetryCode || null;
+    let startDate = req.body.startDate || null;
+    let endDate = req.body.startDate || null;
+    //정보가 누락된 경우 400에러
+    /*
+    if(tmCode === null || startDate === null || endDate === null){
+        return res.status(400).json({error:'One of the information is missing: telemetryCode, startDate, or endDate.'});
+    }
+    */
     let model = require('../DB/model/TelemetryMeta')(db.sequelize,db.Sequelize.DataTypes);
-    model.findOne({where:{TelemetryCode:tmCode}})
+    model.findOne({where:{TelemetryCode:tmCode}}) //meta정보 조회
         .bind(res)
         .then(tmMeta=>{
             let table = tmMeta.dataValues.DataTableName;
             let dataModel = require(`../DB/model/telemetry/${table}`)(db.sequelize,db.Sequelize.DataTypes);
-            dataModel.findAll()
-                .then(data=>{
-                    if(option.selectItems === 'all' && option.searchCond === null){
-                        return res.status(200).json(data); //option이 없는 경우 전체 결과 반환
-                    }
-                    //TODO : option 처리 구현
-                },reason=>{
-                    return res.status(503).json({error:reason});
-                })
+            console.log(startDate);
+            console.log(endDate);
+            dataModel.findAll({ //데이터 검색
+                //TODO: 기간 검색 기능
+            }) 
+            .then(data=>{
+                    return res.status(200).json(data);
+            },reason=>{
+                return res.status(503).json({error:reason});
+            })
         },reason=>{
             return res.status(503).json({error:reason});
         });

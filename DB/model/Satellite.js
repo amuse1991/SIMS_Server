@@ -8,8 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         SatelliteName:{type:DataTypes.STRING},
         ImgSource:{type:DataTypes.STRING},
-        LaunchDate:{type:DataTypes.DATE},
-        DaysOfOperation:{type:DataTypes.INTEGER}
+        LaunchDate:{type:DataTypes.DATE}
     },{
         tableName: 'TB_Satellite',
           timestamps: false,

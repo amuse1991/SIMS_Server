@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true 
     },
-    Time :{ type:DataTypes.DATE},
+    Time :{ type:DataTypes.STRING},
     PPIB_1_REF_0V_V :{ type:DataTypes.FLOAT},
     PPIB_1_REF_PLUS2DOT5V_V :{ type:DataTypes.FLOAT},
     PPIB_1_Bat_V :{ type:DataTypes.FLOAT},

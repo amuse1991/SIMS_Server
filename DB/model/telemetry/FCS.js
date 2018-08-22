@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true
       },
-      Time:{ type:DataTypes.DATE},
+      Time:{ type:DataTypes.STRING},
       OBCLoggingTime:{ type:DataTypes.DATE},
       TaskNumber:{ type:DataTypes.STRING},
       LogTypeID:{ type:DataTypes.STRING},

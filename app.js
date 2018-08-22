@@ -1,6 +1,8 @@
 const express = require('express'); //express 클래스 import
+const cors = require('cors'); //CORS 허용하기 위함
 const apiApp = express(); // express 객체 생성(express 인스턴스가 하나의 서버 역할 수행)
 const serverConfig = require('./configure/config').serverConfig;
+
 
 //socket.io
 const socketApp = express();
@@ -26,14 +28,13 @@ const socketPort = serverConfig.RTDBroadcastPort;
         res.status()
 */
 
-
+apiApp.use(cors());
 apiApp.use(bodyParser.json());
 apiApp.use(bodyParser.urlencoded({ extended: true }));
 
 //   '/users'에 대한 요청은 ./api/user 미들웨어가 담당한다.
 apiApp.use('/user', require('./api/users'));
 apiApp.use('/satellite',require('./api/satellite'));
-apiApp.use('/dashboard',require('./api/dashboard'));
 apiApp.use('/tc',require('./api/tc'));
 apiApp.use('/tm',require('./api/tm'));
 apiApp.use('/rtd', require('./api/rtd'));
