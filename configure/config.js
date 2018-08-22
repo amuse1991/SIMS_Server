@@ -23,3 +23,5 @@ exports.serverConfig = {
     serverApiPort:3002,
     dummyServerPort:3003
 }
+
+exports.GTDsyncTime = 2; //GTD를 위한 OrbitData 전송 주기(초). 초당 n*60개씩 송신
