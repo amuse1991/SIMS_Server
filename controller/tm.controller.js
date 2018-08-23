@@ -40,16 +40,15 @@ exports.getMeta = (req,res) => {
 
 //post(telemetryCode:string, startDate:string, endDate:string)
 exports.getData = (req,res) => {
-    let moment = require('moment');
     let tmCode = req.body.telemetryCode || null;
     let startDate = req.body.startDate || null;
-    let endDate = req.body.startDate || null;
+    let endDate = req.body.endDate || null;
     //정보가 누락된 경우 400에러
-    /*
+    
     if(tmCode === null || startDate === null || endDate === null){
         return res.status(400).json({error:'One of the information is missing: telemetryCode, startDate, or endDate.'});
     }
-    */
+    
     let model = require('../DB/model/TelemetryMeta')(db.sequelize,db.Sequelize.DataTypes);
     model.findOne({where:{TelemetryCode:tmCode}}) //meta정보 조회
         .bind(res)
@@ -59,7 +58,12 @@ exports.getData = (req,res) => {
             console.log(startDate);
             console.log(endDate);
             dataModel.findAll({ //데이터 검색
-                //TODO: 기간 검색 기능
+                where:{Time:{[Op.between]:[startDate,endDate]}} 
+                /* test시 유의사항
+                    FCS데이터는 2016-06-03
+                    WOD데이터는 2015-12-16, 2016-02-03~04 데이터가 있음
+                    기간 설정시 유의할 것
+                */
             }) 
             .then(data=>{
                     return res.status(200).json(data);
