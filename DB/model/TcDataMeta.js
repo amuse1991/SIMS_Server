@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     var TcDataMeta = sequelize.define('TcDataMeta',{
         TelecommandCode:{type:DataTypes.INTEGER},
         DataName:{type:DataTypes.STRING},
-        ChartType:{type:DataTypes.STRING}
+        ChartType:{type:DataTypes.STRING},
+        ChartGroup:{type:DataTypes.STRING}
     },{
         tableName: 'TB_TcDataMeta',
           timestamps: false,
