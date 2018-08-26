@@ -2,6 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   var TC = sequelize.define('TC', 
     {
+        Id:{type:DataTypes.INTEGER,primaryKey:true},
         Dest_Task_ID:{ type:DataTypes.INTEGER},
         Src_Task_ID:{ type:DataTypes.INTEGER},
         OBC_Pkt_Type:{ type:DataTypes.STRING},
@@ -14,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         MAPID:{ type:DataTypes.STRING},
         LAC_Signature:{ type:DataTypes.INTEGER},
         PKT_Seq_No:{ type:DataTypes.STRING},
-        Data:{ type:DataTypes.INTEGER}
+        PKT_Data:{ type:DataTypes.STRING}
     },
     {
         tableName: 'TC',
