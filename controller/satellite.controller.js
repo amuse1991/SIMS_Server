@@ -49,3 +49,14 @@ exports.getTCmetaListBySatCode = (req,res) => {
             return res.status(503).json({error: reason}); //Service Unavailable
         });
 }
+
+exports.getSatCount = (req,res) => {
+    let model = require('../DB/model/Satellite')(db.sequelize,db.Sequelize.DataTypes);
+    model.findAndCountAll()
+        .bind(res)
+        .then(count=>{
+            return res.status(200).json({count:count.count});
+        },reason=>{
+            return res.status(503).json({error: reason});
+        });
+}
