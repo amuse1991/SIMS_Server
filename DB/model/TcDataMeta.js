@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
     var TcDataMeta = sequelize.define('TcDataMeta',{
-        TelecommandCode:{type:DataTypes.INTEGER},
+        TelecommandCode:{type:DataTypes.INTEGER, primaryKey:true},
         DataName:{type:DataTypes.STRING},
         ChartType:{type:DataTypes.STRING},
         ChartGroup:{type:DataTypes.STRING}
