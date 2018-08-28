@@ -63,30 +63,7 @@ exports.getData = async (req,res) => {
             return res.status(503).json({error:reason});
         });
 }
-/*
-_gruopDataByTime = (data)=>{
-    console.log("called");
-    let time;
-    let currentIdx;
-    let result = [];
-    data.forEach((item,idx)=>{
-        if(idx==0){
-            time = item.Time;
-            result[0] = item;
-            currentIdx = 0;
-        }else{
-            if(time == item.Time){
-                result[currentIdx] = item;
-            }else{
-                currentIdx++;
-                result[currentIdx] = item;
-            }
-        }
-    })
-    console.log("function end")
-    return result;
-}
-*/
+
 //post(telecommandCode:string, selectOption:{selectItems:[string(default==all)],searchCond:string(default==null)}})
 exports.getChartType = (req,res) => {
     let model = require('../DB/model/TcDataMeta')(db.sequelize,db.Sequelize.DataTypes);
@@ -111,72 +88,72 @@ exports.getChartType = (req,res) => {
         })
 }
 
-//post(telecommandCode, startDate, endDate, selectOption)
-exports.getDataForCharting = (req,res)=>{
-    let tcCode = req.body.telecommandCode || null;
-    // let startDate = req.body.startDate || null;
-    // let endDate = req.body.endDate || null;
-    // if(tcCode === null || startDate === null || endDate === null){
-    //     return res.status(400).json({error:'One of the information is missing: telecommandCode, startDate, or endDate.'});
-    // }
-    let model = require('../DB/model/TelecommandMeta')(db.sequelize,db.Sequelize.DataTypes);
-    model.findOne({attributes:['TelecommandName'],where:{TelecommandCode:tcCode}}) //tc meta정보 조회
-        .bind(res)
-        .then((tcMeta)=>{
-            tcName = tcMeta.dataValues.TelecommandName;
-            dataModel = require(`../DB/model/telecommand/${tcName}`)(db.sequelize,db.Sequelize.DataTypes);
-            dataModel.findAll(/*{ //데이터 검색
-                where:{Time:{[Op.between]:[startDate,endDate]}}
-        }*/)
-            .then(data=>{
-                chartModel = require('../DB/model/TcDataMeta')(db.sequelize,db.Sequelize.DataTypes);
-                chartModel.findAll({where:{TelecommandCode:tcCode}})
-                .bind(data)
-                .then(chartTypes=>{
-                    let result = _makeChartData(data,chartTypes);
-                    return res.status(200).json(result);
-            })
-        })
-    })
-}
+// //post(telecommandCode, startDate, endDate, selectOption)
+// exports.getDataForCharting = (req,res)=>{
+//     let tcCode = req.body.telecommandCode || null;
+//     // let startDate = req.body.startDate || null;
+//     // let endDate = req.body.endDate || null;
+//     // if(tcCode === null || startDate === null || endDate === null){
+//     //     return res.status(400).json({error:'One of the information is missing: telecommandCode, startDate, or endDate.'});
+//     // }
+//     let model = require('../DB/model/TelecommandMeta')(db.sequelize,db.Sequelize.DataTypes);
+//     model.findOne({attributes:['TelecommandName'],where:{TelecommandCode:tcCode}}) //tc meta정보 조회
+//         .bind(res)
+//         .then((tcMeta)=>{
+//             tcName = tcMeta.dataValues.TelecommandName;
+//             dataModel = require(`../DB/model/telecommand/${tcName}`)(db.sequelize,db.Sequelize.DataTypes);
+//             dataModel.findAll(/*{ //데이터 검색
+//                 where:{Time:{[Op.between]:[startDate,endDate]}}
+//         }*/)
+//             .then(data=>{
+//                 chartModel = require('../DB/model/TcDataMeta')(db.sequelize,db.Sequelize.DataTypes);
+//                 chartModel.findAll({where:{TelecommandCode:tcCode}})
+//                 .bind(data)
+//                 .then(chartTypes=>{
+//                     let result = _makeChartData(data,chartTypes);
+//                     return res.status(200).json(result);
+//             })
+//         })
+//     })
+// }
 
-_makeChartData = (data,chartTypes) => {
-    let res = {chartGroup:[], chartData:[]};
-    chartTypes.sort((a,b)=>{
-        let groupA = a.ChartGroup.toUpperCase();
-        let groupB = b.ChartGroup.toUpperCase();
-        if (groupA < groupB) {
-            return -1;
-        }
-        if (groupA > groupB) {
-            return 1;
-        }
-        //같을 경우
-        return 0;
-    })
+// _makeChartData = (data,chartTypes) => {
+//     let res = {chartGroup:[], chartData:[]};
+//     chartTypes.sort((a,b)=>{
+//         let groupA = a.ChartGroup.toUpperCase();
+//         let groupB = b.ChartGroup.toUpperCase();
+//         if (groupA < groupB) {
+//             return -1;
+//         }
+//         if (groupA > groupB) {
+//             return 1;
+//         }
+//         //같을 경우
+//         return 0;
+//     })
 
-    //차트그룹 생성
-    let currentGroup;
-    for(let i=0; i<chartTypes.length; i++){
-        let item = chartTypes[i];
-        if(item.ChartGroup === currentGroup){
-            continue;
-        }
-        else{
-            res.chartGroup.push(item.ChartGroup);
-            currentGroup = item.ChartGroup;
-        }
-    }
+//     //차트그룹 생성
+//     let currentGroup;
+//     for(let i=0; i<chartTypes.length; i++){
+//         let item = chartTypes[i];
+//         if(item.ChartGroup === currentGroup){
+//             continue;
+//         }
+//         else{
+//             res.chartGroup.push(item.ChartGroup);
+//             currentGroup = item.ChartGroup;
+//         }
+//     }
 
-    for(i=0; i<chartTypes.length; i++){
-        item = chartTypes[i];
-        chartData = [];
-        let name = item.DataName;
-        for(let j=0; j<data.length;j++){
-            chartData.push(data[j].get(name));
-        }
-        item.dataValues.data = chartData;
-        res.chartData.push(item);
-    }
-    return res;
-}
+//     for(i=0; i<chartTypes.length; i++){
+//         item = chartTypes[i];
+//         chartData = [];
+//         let name = item.DataName;
+//         for(let j=0; j<data.length;j++){
+//             chartData.push(data[j].get(name));
+//         }
+//         item.dataValues.data = chartData;
+//         res.chartData.push(item);
+//     }
+//     return res;
+// }

@@ -118,77 +118,77 @@ exports.getChartType = (req,res) => {
         })
 }
 
-//post(telemetryCode, startDate, endDate, selectOption)
-exports.getDataForCharting = (req,res)=>{
-    let tmCode = req.body.telemetryCode || null;
-    let startDate = req.body.startDate || null;
-    let endDate = req.body.endDate || null;
-    if(tmCode === null || startDate === null || endDate === null){
-        return res.status(400).json({error:'One of the information is missing: telemetryCode, startDate, or endDate.'});
-    }
-    let model = require('../DB/model/TelemetryMeta')(db.sequelize,db.Sequelize.DataTypes);
-    model.findOne({attributes:['TelemetryName'],where:{TelemetryCode:tmCode}}) //tm meta정보 조회
-        .bind(res)
-        .then((tmMeta)=>{
-            tmName = tmMeta.dataValues.TelemetryName;
-            dataModel = require(`../DB/model/telemetry/${tmName}`)(db.sequelize,db.Sequelize.DataTypes);
-            dataModel.findAll({ //데이터 검색
-                where:{Time:{[Op.between]:[startDate,endDate]}}
-                /* test시 유의사항
-                    FCS데이터는 2016-06-03
-                    WOD데이터는 2015-12-16, 2016-02-03~04 데이터가 있음
-                    기간 설정시 유의할 것
-                */
-            })
-            .then(data=>{
-                chartModel = require('../DB/model/TmDataMeta')(db.sequelize,db.Sequelize.DataTypes);
-                chartModel.findAll({where:{TelemetryCode:tmCode}})
-                .bind(data)
-                .then(chartTypes=>{
-                    let result = _makeChartData(data,chartTypes);
-                    return res.status(200).json(result);
-            })
-        })
-    })
-}
+// //post(telemetryCode, startDate, endDate, selectOption)
+// exports.getDataForCharting = (req,res)=>{
+//     let tmCode = req.body.telemetryCode || null;
+//     let startDate = req.body.startDate || null;
+//     let endDate = req.body.endDate || null;
+//     if(tmCode === null || startDate === null || endDate === null){
+//         return res.status(400).json({error:'One of the information is missing: telemetryCode, startDate, or endDate.'});
+//     }
+//     let model = require('../DB/model/TelemetryMeta')(db.sequelize,db.Sequelize.DataTypes);
+//     model.findOne({attributes:['TelemetryName'],where:{TelemetryCode:tmCode}}) //tm meta정보 조회
+//         .bind(res)
+//         .then((tmMeta)=>{
+//             tmName = tmMeta.dataValues.TelemetryName;
+//             dataModel = require(`../DB/model/telemetry/${tmName}`)(db.sequelize,db.Sequelize.DataTypes);
+//             dataModel.findAll({ //데이터 검색
+//                 where:{Time:{[Op.between]:[startDate,endDate]}}
+//                 /* test시 유의사항
+//                     FCS데이터는 2016-06-03
+//                     WOD데이터는 2015-12-16, 2016-02-03~04 데이터가 있음
+//                     기간 설정시 유의할 것
+//                 */
+//             })
+//             .then(data=>{
+//                 chartModel = require('../DB/model/TmDataMeta')(db.sequelize,db.Sequelize.DataTypes);
+//                 chartModel.findAll({where:{TelemetryCode:tmCode}})
+//                 .bind(data)
+//                 .then(chartTypes=>{
+//                     let result = _makeChartData(data,chartTypes);
+//                     return res.status(200).json(result);
+//             })
+//         })
+//     })
+// }
 
-_makeChartData = (data,chartTypes) => {
-    let res = {chartGroup:[], chartData:[]};
-    chartTypes.sort((a,b)=>{
-        let groupA = a.ChartGroup.toUpperCase();
-        let groupB = b.ChartGroup.toUpperCase();
-        if (groupA < groupB) {
-            return -1;
-        }
-        if (groupA > groupB) {
-            return 1;
-        }
-        //같을 경우
-        return 0;
-    })
+// _makeChartData = (data,chartTypes) => {
+//     let res = {chartGroup:[], chartData:[]};
+//     chartTypes.sort((a,b)=>{
+//         let groupA = a.ChartGroup.toUpperCase();
+//         let groupB = b.ChartGroup.toUpperCase();
+//         if (groupA < groupB) {
+//             return -1;
+//         }
+//         if (groupA > groupB) {
+//             return 1;
+//         }
+//         //같을 경우
+//         return 0;
+//     })
 
-    //차트그룹 생성
-    let currentGroup;
-    for(let i=0; i<chartTypes.length; i++){
-        let item = chartTypes[i];
-        if(item.ChartGroup === currentGroup){
-            continue;
-        }
-        else{
-            res.chartGroup.push(item.ChartGroup);
-            currentGroup = item.ChartGroup;
-        }
-    }
+//     //차트그룹 생성
+//     let currentGroup;
+//     for(let i=0; i<chartTypes.length; i++){
+//         let item = chartTypes[i];
+//         if(item.ChartGroup === currentGroup){
+//             continue;
+//         }
+//         else{
+//             res.chartGroup.push(item.ChartGroup);
+//             currentGroup = item.ChartGroup;
+//         }
+//     }
 
-    for(i=0; i<chartTypes.length; i++){
-        item = chartTypes[i];
-        chartData = [];
-        let name = item.DataName;
-        for(let j=0; j<data.length;j++){
-            chartData.push(data[j].get(name));
-        }
-        item.dataValues.data = chartData;
-        res.chartData.push(item);
-    }
-    return res;
-}
+//     for(i=0; i<chartTypes.length; i++){
+//         item = chartTypes[i];
+//         chartData = [];
+//         let name = item.DataName;
+//         for(let j=0; j<data.length;j++){
+//             chartData.push(data[j].get(name));
+//         }
+//         item.dataValues.data = chartData;
+//         res.chartData.push(item);
+//     }
+//     return res;
+// }
