@@ -5,15 +5,15 @@ const serverConfig = require('./configure/config').serverConfig;
 
 
 //socket.io
-const socketApp = express();
-const http = require('http').Server(socketApp);
-const io = require('socket.io')(http);
-const ioClient = require('socket.io-client');
-const dummyHost = `http://${serverConfig.host}:${serverConfig.dummyServerPort}`;
+//const socketApp = express();
+//const http = require('http').Server(socketApp);
+//const io = require('socket.io')(http);
+//const ioClient = require('socket.io-client');
+//const dummyHost = `http://${serverConfig.host}:${serverConfig.dummyServerPort}`;
 
 const bodyParser = require('body-parser');
 const apiPort = serverConfig.serverApiPort;
-const socketPort = serverConfig.RTDBroadcastPort;
+//const socketPort = serverConfig.RTDBroadcastPort;
 
 /* app.get(url,요청 들어오면 실행할 함수)
 
@@ -50,28 +50,28 @@ apiApp.listen(apiPort, () => {
 
 
 //sims-client 와 소켓 통신하기 위한 소켓서버
-http.listen(socketPort, function(){
-    console.log(`SIMS-Server(socket) listening on ${serverConfig.host}:${socketPort}`);
-  });
+// http.listen(socketPort, function(){
+//     console.log(`SIMS-Server(socket) listening on ${serverConfig.host}:${socketPort}`);
+//   });
 
-io.on('connection', function(socket){
-    console.log('a user connected');
-    //TM 데이터 요청 이벤트에 대한 이벤트 리스너
-    socket.on('request_telemetry',function(rtdType){
-        console.log(rtdType);
-        //dummy server에 연결
-        const clientSocket = ioClient(dummyHost);
-        clientSocket.on('connect', () => {
-            clientSocket.emit('request_telemetry',rtdType);
-        });
-        clientSocket.on('response_telemetry',(msg)=>{
-            console.log(msg);
-            io.emit('response_telemetry',msg)
-        });
-    });
+// io.on('connection', function(socket){
+//     console.log('a user connected');
+//     //TM 데이터 요청 이벤트에 대한 이벤트 리스너
+//     socket.on('request_telemetry',function(rtdType){
+//         console.log(rtdType);
+//         //dummy server에 연결
+//         const clientSocket = ioClient(dummyHost);
+//         clientSocket.on('connect', () => {
+//             clientSocket.emit('request_telemetry',rtdType);
+//         });
+//         clientSocket.on('response_telemetry',(msg)=>{
+//             console.log(msg);
+//             io.emit('response_telemetry',msg)
+//         });
+//     });
   
-    socket.on('request_telecommand',function(){
+//     socket.on('request_telecommand',function(){
   
-    });
+//     });
     
-});
+// });
