@@ -22,8 +22,6 @@ clientSocket ==> 관제 서버(dummy server)와 소통(socket.io client)
 //네임스페이스 생성(TM/TC)
 let TMnameSpace = io.of('/TMnameSpace');
 let TCnameSpace = io.of('/TCnameSpace');
-let waitingSpace = io.of('/waitingSpace')
-let waiting = [];
 
 let dataset = {
     TM:[], // {dataName(WOD/FCS):string, data:[]}
@@ -34,29 +32,66 @@ let dataset = {
 const clientSocket = ioClient(dummyHost); //ioClient 생성하면 자동으로 dummyhost에 연결 요청을한다.
 clientSocket.on('connectionACK',(myId)=>{
     console.log('dummy server send ACK, connection success. my socket ID is:'+myId); //연결 성공
-    //clientSocket.emit('requestTM','WOD');
+    //데이터 수신 요청
+    clientSocket.emit('requestTM','WOD'); 
+    setTimeout(()=>{
+        clientSocket.emit('requestTM','FCS');
+    },10)
+    setTimeout(()=>{
+        clientSocket.emit('requestTC','TC');
+    },10)
+
+    
+    //데이터가 수신되면 각 Room에 전달
+    clientSocket.on('respWODData',(data)=>{
+        console.log(data);
+        setTimeout(()=>{
+            TMnameSpace.to('WOD').emit('WODresp',data);
+        },10);
+    })
+    clientSocket.on('respFCSData',(data)=>{
+        console.log(data);
+        setTimeout(()=>{
+            TMnameSpace.to('FCS').emit('FCSresp',data);
+        },10);
+    })
+    clientSocket.on('respTCData',(data)=>{
+        console.log(data);
+        setTimeout(()=>{
+            TCnameSpace.to('TC').emit('TCresp',data);
+        },10);
+    })
     //클라이언트 연결 대기
     http.listen(socketPort, () => {
         console.log(`RTD sevice listening on ${serverConfig.host}:${socketPort}`);
-        waitingSpace.on('connection',(socket)=>{ //사용자 접속
-            console.log('client conneted in waiting nameSpace. client socket ID:'+socket.id);
-            waiting.push(socket.id);
-            socket.on('requestTelemetry',(req)=>{
+        //TM
+        TMnameSpace.on('connection',(socket)=>{ //클라이언트가 TM namespace 접속
+            console.log('client conneted in TMnameSpace. client socket ID:'+socket.id);
+            socket.on('requestTelemetry',(req)=>{ //Telemetry 요청
                 console.log(`request telemetry is called. id:${req.id}, type:${req.type}`);
+                socket.join(req.type,()=>{ // room(WOD,FCS)에 join
+                    let rooms = Object.keys(socket.rooms);
+                    console.log(rooms);
+                });
             })
         })
-        TMnameSpace.on('connection',(socket)=>{ //TM namespace 접속
-            console.log('client conneted in TMnameSpace. client socket ID:'+socket.id);
-        })
+        //TC
         TCnameSpace.on('connection',(socket)=>{ //TC namespace 접속
             console.log('client conneted in TCnameSpace. client socket ID:'+socket.id);
+            socket.on('requestTelecommand',(req)=>{ //Telecommnad 요청
+                console.log(`request telecommand is called. id:${req.id}, type:${req.type}`);
+                socket.join(req.type,()=>{ // room(WOD,FCS)에 join
+                    let rooms = Object.keys(socket.rooms);
+                    console.log(rooms);
+                });
+            })
         })
     });
 });
 
-clientSocket.on('respData',(data)=>{
-    console.log(data);
-})
+// clientSocket.on('respData',(data)=>{
+//     console.log(data);
+// })
 
 
 
