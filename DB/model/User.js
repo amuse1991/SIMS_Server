@@ -1,13 +1,25 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
     var User = sequelize.define('User',{
-        ID:{type:DataTypes.STRING},
+        Id:{type:DataTypes.STRING},
         Pwd:{type:DataTypes.STRING},
         UserName:{type:DataTypes.STRING},
-        Dept:{type:DataTypes.STRING},
-        Position:{type:DataTypes.STRING},
-        Email:{type:DataTypes.STRING},
-        Phone:{type:DataTypes.STRING}
+        Dept:{
+            type:DataTypes.STRING, 
+            defaultValue:"NULL"
+        },
+        Position:{
+            type:DataTypes.STRING,
+            defaultValue:"NULL"
+        },
+        Email:{
+            type:DataTypes.STRING,
+            defaultValue:"NULL"
+        },
+        Phone:{
+            type:DataTypes.STRING,
+            defaultValue:"NULL"
+        }
     },{
         tableName: 'TB_User',
           timestamps: false,

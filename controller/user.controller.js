@@ -25,10 +25,28 @@ exports.login = (req, res) => {
 exports.create = (req, res) => {
   let id = req.body.id;
   let pwd = req.body.pwd;
+  let userName = req.body.userName;
   let dept = req.body.dept;
   let pos = req.body.pos;
+  let mail = req.body.mail;
   let phone = req.body.phone;
-  
+  userModel.create({
+    Id:id,
+    Pwd:pwd,
+    UserName:userName,
+    Dept:dept,
+    Position:pos,
+    Email:mail,
+    Phone:phone
+  })
+  .bind(res)
+  .then(newUser=>{
+    //아이디 정상 생성
+    return res.status(200).json(newUser)
+  },reason=>{
+    //아이디 생성 실패
+    return res.status(400).json(reason)
+  })
 };
 
 exports.update = (req, res) => {

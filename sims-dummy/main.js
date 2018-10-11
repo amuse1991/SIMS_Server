@@ -21,7 +21,7 @@ FCS.findAll().then(fcsData=>{
   receivedDataFromSatellite.push({dataType:'TM',dataName:'FCS',data:fcsData});
 });
 
-// //위성에서 TC데이터가 수신되었다고 가정
+//위성에서 TC데이터가 수신되었다고 가정
 TC.findAll().then(tcData=>{
   receivedDataFromSatellite.push({dataType:'TC',dataName:'TC',data:tcData});
   io.emit('SELECT',{dataType:'TC',dataName:'TC'});
@@ -30,6 +30,7 @@ TC.findAll().then(tcData=>{
 io.on('connection', function(socket){
   console.log('a user connected');
   io.emit('connectionACK',socket.id); //SIMS Server에 연결 확인 메시지 전달
+  //TM
   socket.on('requestTM',(tmType)=>{
     console.log('requestTM')
     let tmData = receivedDataFromSatellite.find(element=>element.dataName===tmType).data;
@@ -39,7 +40,8 @@ io.on('connection', function(socket){
       },idx*1000)
     });
   });
-
+  
+  //TC
   socket.on('requestTC',(tcType)=>{
     console.log('requestTC')
     let tcData = receivedDataFromSatellite.find(element=>element.dataName===tcType).data;
